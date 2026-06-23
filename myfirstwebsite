@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Jokes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .joke-box {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .joke-text {
+            font-size: 1.2em;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .punchline {
+            font-size: 1.1em;
+            color: #764ba2;
+            font-weight: bold;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .punchline.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-reveal {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-reveal:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #653a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+        }
+
+        .loading {
+            display: none;
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .loading.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>😂 Random Jokes</h1>
+        
+        <div class="joke-box">
+            <div class="joke-text" id="jokeText">Loading a joke...</div>
+            <div class="punchline" id="punchline"></div>
+            <div class="loading" id="loading">Loading...</div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-reveal" id="revealBtn">Reveal Punchline</button>
+            <button class="btn-next" id="nextBtn">Next Joke</button>
+        </div>
+    </div>
+
+    <script>
+        const jokes = [
+            {
+                setup: "Why don't scientists trust atoms?",
+                punchline: "Because they make up everything!"
+            },
+            {
+                setup: "Why did the scarecrow win an award?",
+                punchline: "He was outstanding in his field!"
+            },
+            {
+                setup: "What do you call a fake noodle?",
+                punchline: "An impasta!"
+            },
+            {
+                setup: "Why don't eggs tell jokes?",
+                punchline: "They'd crack each other up!"
+            },
+            {
+                setup: "What do you call a bear with no teeth?",
+                punchline: "A gummy bear!"
+            },
+            {
+                setup: "Why did the coffee file a police report?",
+                punchline: "It got mugged!"
+            },
+            {
+                setup: "What's orange and sounds like a parrot?",
+                punchline: "A carrot!"
+            },
+            {
+                setup: "Why don't skeletons fight each other?",
+                punchline: "They don't have the guts!"
+            },
+            {
+                setup: "What did one wall say to the other wall?",
+                punchline: "I'll meet you at the corner!"
+            },
+            {
+                setup: "Why did the math book look sad?",
+                punchline: "Because it had too many problems!"
+            },
+            {
+                setup: "What do you call a sleeping bull?",
+                punchline: "A dozer!"
+            },
+            {
+                setup: "Why don't ants ever get sick?",
+                punchline: "Because they have little anty-bodies!"
+            }
+        ];
+
+        let currentJoke = 0;
+        const jokeText = document.getElementById('jokeText');
+        const punchline = document.getElementById('punchline');
+        const revealBtn = document.getElementById('revealBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const loading = document.getElementById('loading');
+
+        function displayJoke() {
+            const joke = jokes[currentJoke];
+            jokeText.textContent = joke.setup;
+            punchline.textContent = joke.punchline;
+            punchline.classList.remove('show');
+            revealBtn.textContent = 'Reveal Punchline';
+        }
+
+        function revealPunchline() {
+            punchline.classList.add('show');
+            revealBtn.textContent = 'Punchline Revealed!';
+        }
+
+        function nextJoke() {
+            currentJoke = (currentJoke + 1) % jokes.length;
+            displayJoke();
+        }
+
+        revealBtn.addEventListener('click', revealPunchline);
+        nextBtn.addEventListener('click', nextJoke);
+
+        // Display the first joke on load
+        displayJoke();
+    </script>
+</body>
+</html>
